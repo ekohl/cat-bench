@@ -1,0 +1,10 @@
+#!/bin/sh
+
+export SERVER=centos8-stream-katello-nightly.guus.example.com
+export USERNAME=admin
+export PASSWORD=changeme
+
+export ACTIVATION_KEY=test
+
+export IMAGE=register:latest
+export LABEL=katello-bulk-register

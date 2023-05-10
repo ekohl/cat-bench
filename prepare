@@ -1,0 +1,7 @@
+#!/bin/bash
+
+. settings
+
+podman build -t $IMAGE .
+
+# TODO: ensure $ACTIVATION_KEY on $SERVER exists

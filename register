@@ -1,0 +1,27 @@
+#!/bin/bash -e
+
+. settings
+
+ID=$(podman run --detach --rm --label "test=$LABEL" $IMAGE)
+trap 'podman kill "$ID"' EXIT
+
+COMMAND=$((curl --silent --insecure -X POST --data @- \
+  --user "${USERNAME}:${PASSWORD}" \
+  --header 'Content-Type: application/json' \
+  https://${SERVER}/api/registration_commands | jq -r .registration_command
+) <<EOF
+{
+  "registration_command": {
+    "activation_keys": ["${ACTIVATION_KEY}"],
+    "insecure": true
+  }
+}
+EOF
+)
+
+if [[ $COMMAND == null ]] ; then
+        exit 1
+fi
+
+# SMDEV_CONTAINER_OFF turns off container detection
+podman exec -t "$ID" /bin/sh -c "export SMDEV_CONTAINER_OFF=1 ; $COMMAND"
